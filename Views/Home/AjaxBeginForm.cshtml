@@ -1,0 +1,77 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+<h2>Ajax BeginForm Explained</h2>
+<div>
+    <div class="code">
+        <b>This example is very simple and can be found here on the website, you can try this one :</b>
+        <a href="~/AjaxFun/index">Ajax fun</a><br/>
+        Ensure that "jquery.unobtrusive-ajax.js" is downoaded to the project and implemented.
+        So that they represented in the following order:
+    </div>
+    <div class="code frame">
+        &lt;script src="~/Scripts/jquery-1.10.2.min.js"&gt;&lt;/script&gt;
+        &lt;script src="~/Scripts/jquery.unobtrusive-ajax.min.js"&gt;&lt;/script&gt;
+    </div>
+    <div>Start by creating two controller methods as here. (notice that they return JSON strings...)</div>
+
+    <div class="code frame">
+        [HttpPost]
+        public ActionResult AjaxPost1(string Name)
+        {
+        return Json("Good name you got there, "+ Name );
+        }
+
+        [HttpPost]
+        public ActionResult AjaxPost2(string Occupation)
+        {
+        return Json("Congratulation with your job as " + Occupation);
+        }
+    </div>
+    <div class="code">
+        Notice the names of the two methods.
+        Add following code to the respective cshtml file:
+    </div>
+    <div class="code frame">
+        @@using (Ajax.BeginForm("AjaxPost1", "AjaxFun", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }))
+        {
+        @@Html.Label("Enter Your Name")
+        &lt;br/&gt;
+        @@Html.TextBox("Name", null, new { @@class = "form-control" })
+        &lt;br/&gt;
+        &lt;button id="btnSubmit" type="submit" class="btn btn-primary"&gt;Submit&lt;/button&gt;
+        }
+        &lt;div id="div1"&gt;&nbsp;&lt;/div&gt;
+        &lt; br /&gt;
+        @@using (Ajax.BeginForm("AjaxPost2", "AjaxFun", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess1", OnFailure = "OnFailure" }))
+        {
+        @@Html.Label("Enter Your occupation")
+        &lt;br/&gt;
+        @@Html.TextBox("Occupation", null, new { @@class = "form-control" })
+        &lt;br/&gt;
+        &lt;button id="btnSubmit" type="submit" class="btn btn-primary"&gt;Submit&lt;/button&gt;
+        }
+        &lt;div id="div2"&gt;&nbsp;&lt;/div&gt;
+        &lt;br /&gt;
+    </div>
+    <div class="code">
+        As you can see there are two AJAX beginform on the page referring to the method names in the controller.
+        Notice the Controller name, "Ajaxfun" and the AjaxOptions events, "Onsuccess" and "Onfailure".
+        We only need to create the return events in the cshtml file;
+    </div>
+    <div class="code frame">
+        function OnSuccess(data) {
+        $("#div1").html(data);
+        }
+        function OnSuccess1(data) {
+        $("#div2").html(data);
+        }
+        function OnFailure(data) {
+        alert(data);
+        }
+    </div>
+</div>
+
+@{
+}

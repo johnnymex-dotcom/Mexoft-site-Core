@@ -1,0 +1,57 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+
+*@
+@{
+   
+    ViewBag.Title = "Index";
+}
+<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/lib/jquery-ajax_unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+<h2>Index</h2>
+
+<form asp-controller="AjaxFun" asp-action="AjaxPost1" data-ajax-complete="onComplete" data-ajax-success="OnSuccess" data-ajax-failure="OnFailure" data-ajax="true" data-ajax-method="POST">
+    @Html.Label("Enter Your Name")
+    <br />
+    @Html.TextBox("Name", null, new { @class = "form-control col-md-2" })
+    &nbsp;
+    <span>Simply press the ENTER button or click the button after typing the name.</span>
+    <br />
+    <hr />
+    <button id="btnSubmit" type="submit" class="btn btn-primary">Submit</button>
+</form>
+<div id="div1">&nbsp;</div>
+<br />
+<form asp-controller="AjaxFun" asp-action="AjaxPost2" data-ajax-complete="onComplete" data-ajax-success="OnSuccess1" data-ajax-failure="OnFailure" data-ajax="true" data-ajax-method="POST">
+    @Html.Label("Enter Your occupation")
+    <br />
+    @Html.TextBox("Occupation", null, new { @class = "form-control col-md-2" })
+    &nbsp;
+    <span>Simply press the ENTER button or click the button  after typing the name.</span>
+    <br />
+    <hr />
+    <button id="btnSubmit" type="submit" class="btn btn-primary">Submit</button>
+</form>
+<div id="div2">&nbsp;</div>
+
+<script>
+    $(function () {
+        $("h2").text("Index for AjaxFun");
+    
+    });
+
+    function OnSuccess(data) {
+        $("#div1").html(data);
+    }
+    function OnSuccess1(data) {
+        $("#div2").html(data);
+    }
+    function OnFailure(data) {
+        alert(data);
+    }
+
+    var onComplete = function () {
+        results.html("");
+    };
+</script>

@@ -1,0 +1,73 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+<div>
+    <ul>
+        <li><a href="~/home/cvmain">Vis CV</a></li>
+        <li><a href="~/home/ShowValidators">Show validators (regular expression)</a></li>
+        <li><a href="~/home/AjaxBeginForm">Ajax Beginform</a></li>
+        <li>
+            <a core="true">.NET CORE issues</a>
+            <ul id="coreUl">
+
+                <li><a href="/home/ReadConfigValues">Configuration, how to read values.</a></li>
+                <li><a href="/home/HowToImplementEFCore">Entity Framework, how to implement EF Core.</a></li>
+                <li><a href="/home/HowToImplementCulture">Culture, how to implement a specific one.</a></li>
+                <li>
+                    <a coreSub="true" MvcWebApi="true">Calling REST(Web API) webservice methods from a MVC Application.</a>
+                    <ul id="MvcWA">
+                        <li><a href="/home/GetMethods"><b>GET</b> method(s)</a></li>
+                        <li><a href="/home/PutMethod"><b>PUT</b> method</a></li>
+                        <li><a href="/home/PostMethod"><b>POST</b> method</a></li>
+                        <li><b>DELETE</b> <i>Awaits further incoming proposals.</i></li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a reactCore="true">React (.NET CORE) issues</a>
+            <ul id="Reactor">
+                <li><a href="/home/CRUD_React"><b>CRUD</b> <b>CR</b>eate</a></li>
+                <li><a href="/home/CRUD_React_Edit"><b>CRUD</b> <b>U</b>pdate</a></li>
+                <li><a href="">More to come here...</a></li>
+
+
+            </ul>
+        </li>
+        <li><a href="~/home/WebAPISeveralGetMethods">Web-API, several GET methods</a></li>
+        <li><div class="divEmphasized"><a href="javascript:window.open('https://mycrudexperiments20200711103047.azurewebsites.net/');">React example, basic CRUD (CLOUD)</a></div></li>
+        <li><div class="divEmphasizedNotTop"><a href="javascript:window.open('https://blazorappserver20200711132533.azurewebsites.net/Suppliers');">Blazor example, basic CRUD (CLOUD)</a></div></li>
+    </ul>
+</div>
+@section scripts{
+    <script>
+        $(function () {
+            $("#coreUl").hide();
+            $("#MvcWA").hide();
+            $("#Reactor").hide();
+            $("a[core='true']").css("cursor", "pointer");
+            $("a[coreSub='true']").css("cursor", "pointer");
+            $("a[reactCore='true']").css("cursor", "pointer");
+            $("a[reactCore='true']").click(function () {
+                if ($("#Reactor").is(":visible"))
+                    $("#Reactor").hide();
+                else
+                    $("#Reactor").show();
+            });
+            $("a[core='true']").click(function () {
+                if ($("#coreUl").is(":visible"))
+                    $("#coreUl").hide();
+                else
+                    $("#coreUl").show();
+            });
+            $("a[MvcWebApi='true']").click(function () {
+                if ($("#MvcWA").is(":visible"))
+                    $("#MvcWA").hide();
+                else
+                    $("#MvcWA").show();
+            });
+        });
+    </script>
+}

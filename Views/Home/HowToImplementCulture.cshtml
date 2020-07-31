@@ -1,0 +1,64 @@
+﻿
+@{
+    ViewData["Title"] = "HowToImplementCulture";
+}
+
+
+<h2>How To Implement Culture</h2>
+<div class="code">
+    Here is how to implement a specific culture in your application.
+    In the Startup.cs, add following code to the ConfigureServices method:
+</div>
+<div class="code frame">
+    public void ConfigureServices(IServiceCollection services)
+    {
+    <b>
+        services.Configure<RequestLocalizationOptions>
+            (options =>
+            {
+            options.DefaultRequestCulture = new RequestCulture("da-DK");
+            });
+    </b>
+    services.AddControllersWithViews();
+    }
+</div>
+<div class="code">
+    Let's say you add <b>Asu (Tanzania)</b> culture to the <b>DefaultRequestCulture</b> above and
+    you carry out with following controllermethod and view:
+
+    <b>Controller</b>
+</div>
+<div class="code frame">
+    public IActionResult Index()
+    {
+    ViewBag.Today = DateTime.Now;
+    ViewBag.MyWage = 10000.75;
+    ViewBag.Culture = CultureInfo.CurrentCulture.DisplayName;
+    ViewBag.UICulture = CultureInfo.CurrentUICulture.DisplayName;
+    return View();
+    }
+</div>
+<div class="code"><b>View</b></div>
+<div class="code frame">
+    @@{
+    ViewData["Title"] = "Home Page";
+    }
+    &lt;div&gt;
+    &lt;div&gt;@@ViewBag.Today&lt;/div&gt;
+    &lt;div&gt;@@ViewBag.MyWage&lt;/div&gt;
+    &lt;div&gt;Current culture : @@ViewBag.Culture&lt;/div&gt;
+    &lt;div&gt;Current UI culture : @@ViewBag.UICulture&lt;/div&gt;
+
+    &lt;/div&gt;
+</div>
+<div class="code">
+    You will have something like this:
+    <div style="border:1px solid blue">
+        <img src="~/Images/TanzaniaCulture.JPG" />
+    </div>
+    The word <b>Kipare (Tadhania)</b> is not because there is a spell-error, that's how people from Tanzania write it.
+</div>
+
+
+
+
