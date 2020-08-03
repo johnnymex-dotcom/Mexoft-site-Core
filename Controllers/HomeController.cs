@@ -61,6 +61,26 @@ namespace Mexoft_site.Controllers
             return View();
         }
 
+        public ActionResult CVMain()
+        {
+            return View();
+        }
+
+        public ActionResult CRUD_React()
+        {
+            return View();
+        }
+
+        public ActionResult CRUD_React_Edit()
+        {
+            return View();
+        }
+
+        public ActionResult WebAPISeveralGetMethods()
+        {
+            return View();
+        }
+        
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

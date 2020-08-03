@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>Mexoft_site</RootNamespace>
+    <UserSecretsId>f23fae29-e480-4549-b718-5583aabed06c</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

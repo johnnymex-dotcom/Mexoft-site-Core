@@ -3,12 +3,12 @@
 }
 
 .HomeText {
-    background-color: hotpink;
+    background-color: darkkhaki;
     color: white;
 }
 
 .HomeText:hover {
-    background-color: hotpink;
+    background-color: darkgoldenrod;
     color: white;
     font-weight:bold;
 }

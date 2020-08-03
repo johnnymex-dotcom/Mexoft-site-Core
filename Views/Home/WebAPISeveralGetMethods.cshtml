@@ -1,0 +1,54 @@
+﻿
+@{
+    ViewBag.Title = "WebAPISeveralGetMethods";
+}
+
+<style>
+    div.xcode {
+        font-family: "Helvetica"; /*, monospace;*/
+        white-space: pre;
+    }
+</style>
+<h2>WebAPI Several Get Methods</h2>
+
+<div class="code">
+    We know that there can be more than one <b>GET</b> methods in <b>Web-API</b>.
+    In the default setup, two method templates are reseved to the API-controller:
+</div>
+<div class="code frame">
+    // GET: api/Employee
+    [HttpGet]
+    public IEnumerable<Employee>
+        Get()
+        {
+        .....
+        }
+
+        // GET: api/Employee/5
+        [HttpGet("{id}", Name = "Get")]
+        public Employee Get(int id)
+        {
+        .....
+        }
+</div>
+<div class="code">
+    This is typically the display for "all" employees in this case, and one for one particular employee with certain id.
+    Imagine that you want to make a different query of employee table , let's say, returning
+    more than one employees, not all but a filtered query.
+</div>
+<div class="code frame">
+    [HttpGet("<b>getadvanced</b>",Name ="<b>getadvanced</b>")]
+    public IEnumerable<Employee>
+        <b>GetAdvanced()</b>
+        {
+        <b>return Employees.Where(i=>i.FirstName=="Sofia" || i.FirstName=="Mickey").ToList();</b>
+        }
+</div>
+<div class="code">
+    So simply repeat the <b>HttpGet</b> clause from above(<b>[HttpGet("{id}", Name = "Get")]</b>), namely the <b>Name ="getadvanced"</b>
+    Afterwards, you can perform the query , <b>http://localhost:32107/api/employee/getadvanced</b> and get selected employees shown.
+    <span style="color:darkgoldenrod">
+        [{"id":2,"firstName":"Sofia","lastName":"Holm","position":"Clerk","age":24},
+        {"id":5,"firstName":"Mickey","lastName":"Mouse","position":"MouseTrapper","age":57}]
+    </span>
+</div>
