@@ -7,12 +7,12 @@
 <div class="code">In .NET CORE there is no Web.config but replaced by a appsettings.json file like this one:</div>
 <div class="code frame">
     "Logging": {
-    "LogLevel": {
-    "Default": "Warning"
-    }
-    },
-    "AllowedHosts": "*",
-    "Version":  "2.145.378.4",
+            "LogLevel": {
+                "Default": "Warning"
+            }
+        },
+        "AllowedHosts": "*",
+        "Version":  "2.145.378.4",
     }
 </div>
 <div class="code">
@@ -22,13 +22,13 @@
 <div class="code frame">
     public class Startup
     {
-    public Startup(IConfiguration configuration)
-    {
-    Configuration = configuration;
-    }
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
 
-    public IConfiguration Configuration { get; }
-    ...
+        public IConfiguration Configuration { get; }
+        ...
     }
 </div>
 <div class="code">
@@ -38,20 +38,19 @@
 <div class="code frame">
     public class HomeController : Controller
     {
-    private IConfiguration Config;
-    public HomeController(IConfiguration configuration)
-    {
-    Config = configuration;
-    }
-    ...
-    public async Task<IActionResult>
-        Index()
+        private IConfiguration Config;
+        public HomeController(IConfiguration configuration)
         {
-        //Read the "Version" value return it on the View
-        ViewBag.Ver = Config.GetSection("Version").Value;
-        return View();
+        Config = configuration;
         }
+    ...
+        public async Task<IActionResult> Index()
+        {
+            //Read the "Version" value return it on the View
+            ViewBag.Ver = Config.GetSection("Version").Value;
+            return View();
         }
+     }
 </div>
 @{
 }

@@ -14,13 +14,13 @@
 <div class="code frame">
     public partial class Employee
     {
-    public int ID { get; set; }
-    [Required]
-    public int WorkNo { get; set; }
-    public string Name { get; set; }
-    .
-    .
-    .
+        public int ID { get; set; }
+        [Required]
+        public int WorkNo { get; set; }
+        public string Name { get; set; }
+        .
+        .
+        .
     }
 </div>
 
@@ -28,14 +28,14 @@
 <div class="code">Following line should be added in the <b>appsettings.json</b></div>
 <div class="code frame">
     {
-    .
-    .
-    .
-    <b>
-        "ConnectionStrings": {
-        "FpcDb": "data source=JO-LENOVO\\SQL2014;initial catalog=FPC_DB;integrated security=True;"
-        }
-    </b>
+        .
+        .
+        .
+        <b>
+            "ConnectionStrings": {
+            "FpcDb": "data source=JO-LENOVO\\SQL2014;initial catalog=FPC_DB;integrated security=True;"
+            }
+        </b>
     }
 </div>
 <div class="code">
@@ -52,28 +52,25 @@
 
     namespace MyCoreMvc.Data
     {
-    public class FPC_Emp_Context: DbContext
-    {
-    public FPC_Emp_Context(DbContextOptions<FPC_Emp_Context>
-        options) : base(options)
+        public class FPC_Emp_Context: DbContext
         {
+            public FPC_Emp_Context(DbContextOptions<FPC_Emp_Context>  options) : base(options)
+            {
+            }
+            public DbSet&lt;Employee&gt; FPC_Employees { get; set; }
         }
-
-        public DbSet&lt;Employee&gt; FPC_Employees { get; set; }
-
-        }
-        }
+     }
 </div>
 
 <div class="code">Add following code in startup.cs :</div>
 <div class="code frame">
     public void ConfigureServices(IServiceCollection services)
     {
-    .
-    .
-    .
-    services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-    <b>services.AddDbContext&lt;FPC_Emp_Context&gt;(options => options.UseSqlServer(Configuration.GetConnectionString("FpcDb")));</b>
+        .
+        .
+        .
+        services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+        <b>services.AddDbContext&lt;FPC_Emp_Context&gt;(options => options.UseSqlServer(Configuration.GetConnectionString("FpcDb")));</b>
     }
 </div>
 <div class="code">
@@ -83,15 +80,15 @@
 <div class="code frame">
     public class HomeController : Controller
     {
-    private readonly FPC_Emp_Context <b>_Efcontext</b>;
+        private readonly FPC_Emp_Context <b>_Efcontext</b>;
 
-    public HomeController(FPC_Emp_Context <b>context</b>)
-    {
-    <b>_Efcontext</b> = context;
-    }
-    .
-    .
-    .
+        public HomeController(FPC_Emp_Context <b>context</b>)
+        {
+            <b>_Efcontext</b> = context;
+        }
+        .
+        .
+        .
     }
 </div>
 <div class="code">In another place in the controller class you can use EF this way:</div>
@@ -101,11 +98,10 @@
     using MyCoreMvc.Models;
     <b>//Ensure that the above namespaces are referred to in your Controller class.</b>
 
-    public async Task<IActionResult>
-        Index()
-        {
-        <b>return View(await _Efcontext.FPC_Employees.ToListAsync());</b>
-        }
+    public async Task<IActionResult> Index()
+    {
+         <b>return View(await _Efcontext.FPC_Employees.ToListAsync());</b>
+    }
 
 </div>
 
