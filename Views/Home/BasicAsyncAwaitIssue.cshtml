@@ -1,0 +1,57 @@
+﻿
+@{
+    ViewData["Title"] = "BasicAsyncAwaitIssue";
+}
+
+
+
+<h2>How to implement Basic Async Await method</h2>
+
+<div class="code">
+    Here is the basic way to implement Async - await method on your own.
+    Here is an example (Winform project - .NET Framework)
+</div>
+<div class="code frame">
+
+    bool started = false;   <b>//This is a flag telling if we have to display current Date and time</b>
+
+    public Form1()
+    {
+    InitializeComponent();
+    }
+
+    private void timer1_Tick(object sender, EventArgs e)
+    {
+    if ( started)
+    this.Text = DateTime.Now.ToLongTimeString(); //<b>Display it if started is true</b>
+    }
+
+    private void Form1_Load(object sender, EventArgs e)
+    {
+    <b>// Normal intialization, - start the timer.</b>
+    LblName.Text = "";
+    this.Text = "Awaiting click the button";
+    timer1.Start();
+    }
+
+    <div class="purpleEmphasize">
+    <b>//The async method itself, calling the Task.Delay with await prefix</b>
+    private async Task<string> ReadTextAsync()
+    {
+        <b>await Task.Delay(TimeSpan.FromMilliseconds(6000));</b>
+        <b>//Set the timer-flag to false when counting is done</b>
+        started = false;
+        this.Text = "Awaiting click the button";
+        return "Time done....";
+    }
+
+    <b>//Remember to set button click as async</b>
+    private async void button1_Click(object sender, EventArgs e)
+    {
+        LblName.Text = "";
+        started = true;
+        string text = <b>await ReadTextAsync();</b>
+        LblName.Text = text;
+    }
+    </div>
+</div>

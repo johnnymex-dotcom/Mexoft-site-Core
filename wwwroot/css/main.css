@@ -249,3 +249,7 @@ div.frame {
     border-left-style: ridge;
     border-left-width: 1px;
 }
+
+.purpleEmphasize {
+    border: 1px solid purple;
+}

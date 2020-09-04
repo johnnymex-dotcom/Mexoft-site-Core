@@ -80,7 +80,11 @@ namespace Mexoft_site.Controllers
         {
             return View();
         }
-        
+
+        public ActionResult BasicAsyncAwaitIssue()
+        {
+            return View();
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
