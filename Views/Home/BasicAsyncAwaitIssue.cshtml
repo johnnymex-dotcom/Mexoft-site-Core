@@ -17,26 +17,26 @@
 
     public Form1()
     {
-    InitializeComponent();
+        InitializeComponent();
     }
 
     private void timer1_Tick(object sender, EventArgs e)
     {
-    if ( started)
-    this.Text = DateTime.Now.ToLongTimeString(); //<b>Display it if started is true</b>
+        if ( started)
+        this.Text = DateTime.Now.ToLongTimeString(); //<b>Display it if started is true</b>
     }
 
     private void Form1_Load(object sender, EventArgs e)
     {
-    <b>// Normal intialization, - start the timer.</b>
-    LblName.Text = "";
-    this.Text = "Awaiting click the button";
-    timer1.Start();
+        <b>// Normal intialization, - start the timer.</b>
+        LblName.Text = "";
+        this.Text = "Awaiting click the button";
+        timer1.Start();
     }
 
     <div class="purpleEmphasize">
     <b>//The async method itself, calling the Task.Delay with await prefix</b>
-    private async Task<string> ReadTextAsync()
+    private async Task&lt;string&gt; ReadTextAsync()
     {
         <b>await Task.Delay(TimeSpan.FromMilliseconds(6000));</b>
         <b>//Set the timer-flag to false when counting is done</b>

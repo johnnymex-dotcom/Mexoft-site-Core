@@ -86,6 +86,12 @@ namespace Mexoft_site.Controllers
             return View();
         }
 
+        public ActionResult LOJ()
+        {
+            return View();
+        }
+
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

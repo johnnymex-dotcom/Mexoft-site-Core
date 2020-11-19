@@ -13,11 +13,10 @@
     public void ConfigureServices(IServiceCollection services)
     {
     <b>
-        services.Configure<RequestLocalizationOptions>
-            (options =>
-            {
-            options.DefaultRequestCulture = new RequestCulture("da-DK");
-            });
+            services.Configure<RequestLocalizationOptions>
+            (options => {
+                            options.DefaultRequestCulture = new RequestCulture("da-DK");
+                        });
     </b>
     services.AddControllersWithViews();
     }
@@ -31,17 +30,17 @@
 <div class="code frame">
     public IActionResult Index()
     {
-    ViewBag.Today = DateTime.Now;
-    ViewBag.MyWage = 10000.75;
-    ViewBag.Culture = CultureInfo.CurrentCulture.DisplayName;
-    ViewBag.UICulture = CultureInfo.CurrentUICulture.DisplayName;
-    return View();
+        ViewBag.Today = DateTime.Now;
+        ViewBag.MyWage = 10000.75;
+        ViewBag.Culture = CultureInfo.CurrentCulture.DisplayName;
+        ViewBag.UICulture = CultureInfo.CurrentUICulture.DisplayName;
+        return View();
     }
 </div>
 <div class="code"><b>View</b></div>
 <div class="code frame">
     @@{
-    ViewData["Title"] = "Home Page";
+        ViewData["Title"] = "Home Page";
     }
     &lt;div&gt;
     &lt;div&gt;@@ViewBag.Today&lt;/div&gt;

@@ -15,30 +15,30 @@
 
     <div class="code frame">
         $("#btnClick").click(function () {
-        var val = $("#txtMine").val();
-        // var res = validate2To5Int(val);
-        var res = validateMoney4Decimals1(val);
-        $("#result").text(res);
+            var val = $("#txtMine").val();
+            // var res = validate2To5Int(val);
+            var res = validateMoney4Decimals1(val);
+            $("#result").text(res);
         });
 
         function validate2To5Int(data) {
-        var regex = "^[0-9]{2,5}";
-        var totest =data;
-        var x =totest.match(regex);
-        if (x!=null && x.length >0 && x[0] === totest)
-        return "OK data";
-        else
-        return "invalid data";
+            var regex = "^[0-9]{2,5}";
+            var totest =data;
+            var x =totest.match(regex);
+            if (x!=null && x.length >0 && x[0] === totest)
+            return "OK data";
+            else
+            return "invalid data";
         }
 
         function validateMoney4Decimals1(data) {
-        var regex = "^\-{0,1}[0-9]{1,4},[0-9]{1,2}$|^\-{0,1}[0-9]{1,4}$";
-        var totest =data;
-        var x =totest.match(regex);
-        if (x != null && x.length > 0 && x[0] === totest)
-        return "OK data (" + new Date().getSeconds()+")";
-        else
-        return "invalid data (" + new Date().getSeconds()+")";
+            var regex = "^\-{0,1}[0-9]{1,4},[0-9]{1,2}$|^\-{0,1}[0-9]{1,4}$";
+            var totest =data;
+            var x =totest.match(regex);
+            if (x != null && x.length > 0 && x[0] === totest)
+            return "OK data (" + new Date().getSeconds()+")";
+            else
+            return "invalid data (" + new Date().getSeconds()+")";
         }
     </div>
 </div>

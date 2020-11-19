@@ -1,0 +1,35 @@
+﻿
+@{
+    ViewData["Title"] = "LOJ";
+}
+
+<h1>Left Outer Join example</h1>
+
+<div class="code">
+    Here is a typical LEFT OUTER JOIN :
+</div>
+<div class="code frame">
+    //Arrange class of what you expect to return from the outer join
+    public class FPCEmployeeDep
+    {
+        public int ID { get; set; }
+        public string Name { get; set; }
+        public string DepartmentName{ get; set; }
+    }
+
+
+
+    public ActionResult JoinItAll()
+    {
+    <b>//https://www.codeproject.com/Questions/726596/Lambda-Left-Outer-Join-and-Right-Outer-Join</b>
+        IEnumerable&lt;FPCEmployeeDep&gt; joinLst =
+                                                        (from e in _FPC_DBEntities.FPC_Employees
+                                                            join d in _FPC_DBEntities.FPC_Departments on e.DepID equals d.ID into ej
+                                                            from d in ej.DefaultIfEmpty()
+                                                            orderby e.ID/* descending*/
+                                                            select new FPCEmployeeDep { ID = e.ID, Name = e.Name, DepartmentName = d.DepartmentName }
+                                                            ).ToList();
+
+        return View( joinLst as IEnumerable&lt;FPCEmployeeDep&gt; );
+    }
+</div>
