@@ -38,43 +38,39 @@
     using Newtonsoft.Json;
 
     //<b>Get all Employees</b>
-    public async Task<ActionResult>
-        GetAllEmployees()
+    public async Task&lt;ActionResult&gt;GetAllEmployees()
+    {
+        List<Employee> EmpInfo = new List<Employee>();
+        using (var client = new HttpClient())
         {
-        List<Employee>
-            EmpInfo = new List<Employee>
-                ();
-                using (var client = new HttpClient())
-                {
-                var Url = "http://" + HttpContext.Request.Host.Value + "/api/Employee";
+            var Url = "http://" + HttpContext.Request.Host.Value + "/api/Employee";
 
-                //Passing service base url
-                client.BaseAddress = new Uri(Url);
-                client.DefaultRequestHeaders.Clear();
-                ////Define request data format
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            //Passing service base url
+            client.BaseAddress = new Uri(Url);
+            client.DefaultRequestHeaders.Clear();
+            ////Define request data format
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                //Sending request to find web api REST service resource GetAllEmployees using HttpClient
-                HttpResponseMessage Res = await client.GetAsync("Employee");
+            //Sending request to find web api REST service resource GetAllEmployees using HttpClient
+            HttpResponseMessage Res = await client.GetAsync("Employee");
 
-                //Checking the response is successful or not which is sent using HttpClient
-                if (Res.IsSuccessStatusCode)
-                {
+            //Checking the response is successful or not which is sent using HttpClient
+            if (Res.IsSuccessStatusCode)
+            {
                 //Storing the response details recieved from web api
                 var EmpResponse = Res.Content.ReadAsStringAsync().Result;
 
                 //Deserializing the response recieved from web api and storing into the Employee list
-                EmpInfo = JsonConvert.DeserializeObject<List<Employee>>(EmpResponse);
-
-                }
-                //returning the employee list to view
-                return View(EmpInfo);
+                EmpInfo = JsonConvert.DeserializeObject&lt;List&lt;Employee&gt;&gt;(EmpResponse);
             }
+            //returning the employee list to view
+            return View(EmpInfo);
         }
+    }
 
-        //<b>Get an Employee with a certain ID</b>
-        public async Task<ActionResult> GetEmployee(int Id)
-        {
+    //<b>Get an Employee with a certain ID</b>
+    public async TaskTask&lt;ActionResult&gt; GetEmployee(int Id)
+    {
             Employee EmpInfo = new Employee();
             using (var client = new HttpClient())
             {
@@ -88,10 +84,10 @@
                 {
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee object
-                    EmpInfo = JsonConvert.DeserializeObject<Employee>(EmpResponse);
+                    EmpInfo = JsonConvert.DeserializeObject&lt;Employee&gt;(EmpResponse);
                 }
                 return View(EmpInfo);
             }
-        }
+    }
 
 </div>
