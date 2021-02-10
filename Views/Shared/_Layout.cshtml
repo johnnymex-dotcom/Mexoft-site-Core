@@ -35,13 +35,20 @@
     </div>
 
     <footer class="border-top footer text-muted">
-        <div class="container">
+        <div class="container mof" >
             &copy; 2020 - Mexoft.dk
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        $(function(){
+             $(".mof").click(function(){
+                 window.location.href="/home/sfj";
+             });
+        });
+    </script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>
