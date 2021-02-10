@@ -1,0 +1,57 @@
+﻿
+@{
+    ViewData["Title"] = "UseMoqWithDbContext";
+}
+
+<h1>Use Moq With DbContext</h1>
+
+<div class="code">
+    When using Moq with DbContext open <b>Manage Nuget Packages</b> and install to 
+    your Unit Test project the <b>Moq</b> library.
+</div>
+<div class="code frame">
+            //<b>In <i>using block</i> add the Moq assembly reference:</b>
+            using Moq;
+
+            //<b>Use the DbContext you know</b>
+            FPC_Emp_Context FakeDbC = new FPC_Emp_Context();
+            var SecMocks = new Moq.Mock<HomeController>(FakeDbC);
+</div>
+<div class="code">
+    Setup the <b>Mock (Moq) Library</b> so a method here <b>GetEmployeesFromManagement()</b> existing in your Controller
+    returns a couple of <b>Employee</b> objects as you knoe from the database table, like this
+</div>
+<div class="code frame">
+    SecMocks.Setup(e => e.GetEmployeesFromManagement()).Returns(new List<Employee>()
+    {
+                    new <b>Employee()</b> {  Alias="JohnnyMex", Name="Johnny", 
+                                      ID =1, HomeEmail="johnny@mexoft.dk", 
+                                      Mobile="42 52 6035", Remarks="Good for now"
+                                    },
+                    new <b>Employee()</b>  {  Alias="RonjaRøverdatter", Name="Ronja", 
+                                       ID =2, HomeEmail="ronja@roverdatter.com", 
+                                       Mobile="12 34 5678", Remarks="Nobody beats Ronja"
+                                    }
+     });
+</div>
+<div class="code">
+    Now you can implement the following in the <b>Unit test:</b>
+</div>
+<div class="code frame">
+            <b>//Here call the Moq version of GetEmployeesFromManagement method.</b>
+            var t = SecMocks.Object.GetEmployeesFromManagement();
+            /*
+              here put any other code you want to test
+            */
+            <b>//Here test if EmployeesFromManagement() actually return a list of any Employee objects</b>
+            Assert.IsTrue(t.Any());
+</div>
+<div class="code">
+    Currently the is a drawback when the <b>Moq</b> object, I can't simply test a whole method that resides in the
+    Controller, but instead I have copy-paste the content of the method from the Controller and into the <b>Unit test</b>
+</div>
+<br />
+<br />
+<a href="javascript:history.back()  ">Return to menu</a>
+<br />
+<br />

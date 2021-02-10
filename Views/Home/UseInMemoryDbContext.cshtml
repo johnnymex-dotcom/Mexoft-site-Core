@@ -1,0 +1,84 @@
+﻿
+@{
+    ViewData["Title"] = "UseInMemoryDbContext";
+}
+
+<h1>Use In-Memory DbContext</h1>
+
+<div class="code">
+    Here you use <b>DbContextOptionsBuilder</b> class when creating a new <b>DbContext</b>.
+    You start out by making a option object to the <b>DbContext</b>
+</div>
+<div class="code frame">
+    var <b>options</b> = new <b>DbContextOptionsBuilder</b><FPC_Emp_Context>()
+                .UseInMemoryDatabase(databaseName: "FpcDb") <b>//The IN-memory database name could be any name you like</b>
+                .Options;
+</div>
+<div class="code">
+    And create a couple of <b>Employee</b> objects in the <b>DbContext</b> using the <b>options</b> just made.
+</div>
+<div class="code frame">
+     using (var context = new FPC_Emp_Context(<b>options</b>))
+            {
+                context.Add(new <b>Employee</b>
+                {
+                    ID = 1,
+                    Alias = "Joe Belushi",
+                    Name = "Joe Belushi",
+                    HomeEmail = "belushi@joebelushi.com",
+                    JobStatus = 1,
+                    Remarks = "what a day.....",
+                    DepID = 1,
+                    Mobile = "6600998822",
+                    Valid = true
+                });
+                context.Add(new new <b>Employee</b>
+                {
+                    ID = 2,
+                    Alias = "Arnold Schwartzenegger",
+                    Name = "Arnold Schwartzenegger",
+                    HomeEmail = "as@schwartsen.com",
+                    JobStatus = 1,
+                    Remarks = "I'll be back !",
+                    DepID = 1,
+                    Mobile = "12345678",
+                    Valid = true
+                });
+
+                context.SaveChanges();
+            }
+</div>
+<div class="code">
+    Here you can call the method which exists in the Controller, here <b>GetEmployeesFromManagement</b>
+    Finally do some tests.
+</div>
+<div class="code frame">         
+        using (var context = new FPC_Emp_Context(options))
+        {
+            HomeController controller = new HomeController(context);
+            var result = <b>controller.GetEmployeesFromManagement();</b>
+            Assert.IsNotNull(result, "GetEmployeesFromManagement is NULL");
+            if (result != null)
+            {
+                Assert.IsTrue(result.Count > 0);
+                Assert.IsInstanceOfType(result, typeof(List<Employee>));
+            }
+        }
+</div>
+<div class="code">
+    Optionally you can test it directly from the <b>Controller</b> returning the <b>ViewResult</b>.
+    Calling the <b>MyHomeC.Index()</b> method istead of calling <b>GetEmployeesFromManagement</b> method above.
+</div>
+<div class="code frame">
+        HomeController MyHomeC = new HomeController(ctx);
+            IActionResult t = <b>MyHomeC.Index()</b>;
+            Assert.IsNotNull(t);
+            ViewResult result = t as ViewResult;
+            var cnt = (result.Model as IEnumerable<DoFpcWithUnitTest.Models.Employee>).Count();
+            Assert.IsTrue(cnt > 0);
+</div>
+<br />
+<br />
+<a href="javascript:history.back()  ">Return to menu</a>
+<br />
+<br />
