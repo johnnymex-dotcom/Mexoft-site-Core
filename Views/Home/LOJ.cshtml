@@ -32,4 +32,44 @@
 
         return View( joinLst as IEnumerable&lt;FPCEmployeeDep&gt; );
     }
+   
+
 </div>
+ 
+ <div class="code">
+    Alternatively in <b>Lambda</b> :
+</div>
+ <div class="code frame">
+        var data =  _context.FPC_Employees
+                        .GroupJoin(
+                           _context.FPC_Departments,
+                           e => e.DepID,
+                           d => d.ID,
+                           (e, ej) =>
+                              new
+                              {
+                                  e = e,
+                                  ej = ej
+                              }
+                        )
+                        .SelectMany(
+                           temp0 => temp0.ej.DefaultIfEmpty(),
+                           (temp0, d) =>
+                              new
+                              {
+                                  temp0 = temp0,
+                                  d = d
+                              }
+                        )
+                        .OrderBy(temp1 => temp1.temp0.e.ID)
+                        .Select(
+                           temp1 =>
+                              new FPCEmployeeDep()
+                              {
+                                  ID = temp1.temp0.e.ID,
+                                  Name = temp1.temp0.e.Name,
+                                  DepartmentName = temp1.d.DepartmentName
+                              }
+                        ).ToList();
+
+ </div>
