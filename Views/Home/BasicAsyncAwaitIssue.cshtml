@@ -25,7 +25,7 @@
         if ( started)
         this.Text = DateTime.Now.ToLongTimeString(); //<b>Display it if started is true</b>
     }
-
+        
     private void Form1_Load(object sender, EventArgs e)
     {
         <b>// Normal intialization, - start the timer.</b>
@@ -35,23 +35,36 @@
     }
 
     <div class="purpleEmphasize">
-    <b>//The async method itself, calling the Task.Delay with await prefix</b>
-    private async Task&lt;string&gt; ReadTextAsync()
-    {
-        <b>await Task.Delay(TimeSpan.FromMilliseconds(6000));</b>
-        <b>//Set the timer-flag to false when counting is done</b>
-        started = false;
-        this.Text = "Awaiting click the button";
-        return "Time done....";
-    }
+        <b>//The async method itself, calling the Task.Delay with await prefix</b>
+        private async Task&lt;string&gt; ReadTextAsync()
+        {
+            <b>await Task.Delay(TimeSpan.FromMilliseconds(6000));</b>
+            <b>//Set the timer-flag to false when counting is done</b>
+            started = false;
+            this.Text = "Awaiting click the button";
+            return "Time done....";
+        }
 
-    <b>//Remember to set button click as async</b>
-    private async void button1_Click(object sender, EventArgs e)
-    {
-        LblName.Text = "";
-        started = true;
-        string text = <b>await ReadTextAsync();</b>
-        LblName.Text = text;
-    }
+        <b>//Remember to set button click as async</b>
+        private async void button1_Click(object sender, EventArgs e)
+        {
+            LblName.Text = "";
+            started = true;
+            string text = <b>await ReadTextAsync();</b>
+            LblName.Text = text;
+        }
     </div>
-</div>
+
+    <b>// A bit different when handling a conventional Controller method in MVC, returning a View:</b>
+    <div class="purpleEmphasize">
+        public async Task&lt;<b>IActionResult</b>&gt; Index()
+        {
+            <b>//Do something here....</b>
+            .
+            .
+            .
+            return <b>await Task.Run(() => View());</b> //Return the View as usual.
+        }
+
+    </div>
+    </div>
