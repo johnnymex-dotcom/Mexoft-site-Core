@@ -34,32 +34,38 @@
         Add following code to the respective cshtml file:
     </div>
     <div class="code frame">
-        @@using (Ajax.BeginForm("AjaxPost1", "AjaxFun", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }))
-        {
+
+        &lt;form asp-controller="AjaxFun" asp-action="AjaxPost1" data-ajax-complete="onComplete" data-ajax-success="OnSuccess" 
+                                                 data-ajax-failure="OnFailure" <b>data-ajax="true"</b> data-ajax-method="POST"&gt;
             @@Html.Label("Enter Your Name")
-            &lt;br/&gt;
-            @@Html.TextBox("Name", null, new { @@class = "form-control" })
-            &lt;br/&gt;
-            &lt;button id="btnSubmit" type="submit" class="btn btn-primary"&gt;Submit&lt;/button&gt;
-        }
+            &lt;br /&gt;
+            @@Html.TextBox("Name", null, new { @@class = "form-control col-md-2" })
+            &nbsp;
+            &lt;span&gt;Simply press the ENTER button or click the button after typing the name.&lt;/span&gt;
+            &lt;br /&gt;
+            &lt;hr /&gt;
+            &lt;button id="btnSubmit" type="submit" class="btn btn-primary"&gt;Comment on Name&lt;/button&gt;
+        &lt;/form&gt;
         &lt;div id="div1"&gt;&nbsp;&lt;/div&gt;
         &lt; br /&gt;
-        @@using (Ajax.BeginForm("AjaxPost2", "AjaxFun", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess1", OnFailure = "OnFailure" }))
-        {
+        &lt;form asp-controller="AjaxFun" asp-action="AjaxPost2" data-ajax-complete="onComplete" data-ajax-success="OnSuccess1"
+                    data-ajax-failure="OnFailure" <b>data-ajax="true"</b> data-ajax-method="POST"&gt;
             @@Html.Label("Enter Your occupation")
-            &lt;br/&gt;
-            @@Html.TextBox("Occupation", null, new { @@class = "form-control" })
-            &lt;br/&gt;
-            &lt;button id="btnSubmit" type="submit" class="btn btn-primary"&gt;Submit&lt;/button&gt;
-        }
-        &lt;div id="div2"&gt;&nbsp;&lt;/div&gt;
-        &lt;br /&gt;
+            &lt;br /&gt;
+            @@Html.TextBox("Occupation", null, new { @@class = "form-control col-md-2" })
+            &nbsp;
+            &lt;span&gt;Simply press the ENTER button or click the button  after typing the name.&lt;/span&gt;
+            &lt;br /&gt;
+            &lt;hr /&gt;
+            &lt;button id="btnSubmit" type="submit" class="btn btn-primary"&gt;Comment on Occupation&lt;/button&gt;
+        &lt;/form&gt;
     </div>
     <div class="code">
-        As you can see there are two AJAX beginform on the page referring to the method names in the controller.
-        Notice the Controller name, "Ajaxfun" and the AjaxOptions events, "Onsuccess" and "Onfailure".
-        We only need to create the return events in the cshtml file;
-    </div>
+    The bold text, <b>data-ajax=true</b> is the keypoint to make it Ajax-oriented.
+    As you can see there are two AJAX beginform on the page referring to the method names in the controller.
+    Notice the Controller name, "Ajaxfun" and the AjaxOptions events, "Onsuccess" and "Onfailure".
+    We only need to create the return events in the cshtml file;
+</div>
     <div class="code frame">
         function OnSuccess(data) {
             $("#div1").html(data);
