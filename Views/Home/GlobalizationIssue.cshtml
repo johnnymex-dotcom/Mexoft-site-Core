@@ -1,0 +1,71 @@
+﻿
+@{
+    ViewData["Title"] = "GlobalizationIssue";
+}
+
+<h1>Globalization (languages and resources)</h1>
+<div class="code">
+    To prepare you application to meet the challenge
+    support countries and cultures.
+    First thing to do is :
+    <b>Startup.cs</b>
+</div>
+<div class="code frame">
+    //<b>Add these usings,</b>
+    using System.Globalization;
+    using Microsoft.AspNetCore.Localization;
+    '
+    '
+    //<b>In ConfigureServices method add following lines of code (example)</b>
+    services.Configure<RequestLocalizationOptions>
+        (options =>
+        {
+        var supportedCultures = new[]
+        {
+        new CultureInfo("en-US"),
+        new CultureInfo("da-DK")
+        };
+        options.DefaultRequestCulture = new RequestCulture("da-DK");
+        options.SupportedCultures = supportedCultures;
+        options.SupportedCultures = supportedCultures;
+        });
+        .
+        .
+        services.AddControllersWithViews();
+        services.AddLocalization(option => option.ResourcesPath = "Resources");
+
+        //<b>In Configure method add these lines after calls to  app.UseHttpsRedirection() and app.UseStaticFiles()</b>
+        var localizeOptions = app.ApplicationServices.GetService &lt;IOptions&lt;RequestLocalizationOptions&gt;&gt;();
+        app.UseRequestLocalization(localizeOptions.Value);
+
+
+
+</div>
+<div class="code">
+    Place a folder with the name <b>Resources</b> with subfolder named <b>Controllers</b> f.ex, with two resx files in it, here english and danish 
+    CultureInfo codes.
+    In this example simply name it HomeControllerXXXX
+
+</div>
+
+<img src="~/Images/Folders_and Resx.jpg" /><br/>
+<div class="code">
+    Containing these strings:
+</div>
+<img src="~/Images/Resx-en.jpg" width="500" />
+<img src="~/Images/Resx-da.jpg" width="500" />
+<div class="code frame">
+    // With the translation in both english and danish.
+    // To get an accessor <b>_localizer</b> from the Controller and <b>Localizer</b> property from a View
+    ,add these lines of code:
+    <br />
+    using <b>Microsoft.Extensions.Localization;</b>
+
+    public class <b>HomeController</b>: Controller
+    {
+    private readonly ILogger&lt;HomeController&gt;  _logger;
+    private readonly IStringLocalizer&lt;<b>HomeController</b>&gt; <b>_localizer</b>;
+
+    public IStringLocalizer&lt;HomeController&gt; <b>Localizer</b> { get { return _localizer; } }
+
+</div>  
