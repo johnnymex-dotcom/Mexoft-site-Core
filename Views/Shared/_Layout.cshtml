@@ -37,7 +37,7 @@
     <footer class="border-top footer text-muted">
         <div class="container" >
             &copy; 2020 - Mexoft.dk
-            <span class="mof" style="float:right;color:red">_</span>
+            <span class="mof" style="float:right;color:lightgray" >_</span>
         </div>
         
     </footer>
@@ -45,7 +45,20 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script>
-        $(function(){
+        $(function () {
+            $(".mof").mouseover(function () {
+                $(".mof").css("color", "lime");
+                $(".mof").css("font-weight", "bold");
+                $(".mof").css("font-size", "24px");
+                $(".mof").text("___");
+            });
+            $(".mof").mouseout(function () {
+                $(".mof").css("color", "lightgray");
+                $(".mof").css("font-weight", "normal");
+                $(".mof").css("font-size", "14px");
+                $(".mof").text("_");
+            });
+
              $(".mof").click(function(){
                  window.location.href="/home/sfj";
              });

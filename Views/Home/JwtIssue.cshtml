@@ -1,0 +1,139 @@
+﻿
+@{
+    ViewData["Title"] = "JwtIssue";
+}
+
+<h1>Jwt Example</h1>
+
+<div class="code">
+    <h3>How to secure an application with JWT (Json Web Token)</h3>
+    Here we are going to use a Web-Api for the example.
+    Let Visual Studio 2019 create a Web-Api project, remember to set <b>Enable Open APISupport</b> checked, to ensure that Swagger is enabled.
+    In <b>Configure method</b> in <b>Startup.cs</b> do the following:
+</div>
+<div class="code frame">
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+            if (env.IsDevelopment())
+            {
+            app.UseDeveloperExceptionPage();
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "CoreAPIWithJWT v1"));
+            }
+
+            app.UseHttpsRedirection();
+
+            app.UseRouting();
+
+            <b>app.UseAuthentication();         //Ensure to set UseAuthentication</b>
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+            endpoints.MapControllers();
+            });
+    }
+</div>
+<div class="code">
+        Create an interface (optionally create a folder named <b>Interfaces</b> to put it in)
+</div>
+<div class="code frame">
+    public interface IJwtAuthenticationManager
+    {
+        string Authenticate(string userName, string password);
+    }
+</div>
+<div class="code">
+    Then install the <b>Microsoft.AspNetCore.Authentication</b> and <b>System.IdentityModel.Tokens.Jwt</b> nuget packages
+    in the project.
+    For this example we will use data for username and password from a internal data store(From a Dictionary).
+</div>
+<div class="code frame">
+    public class JwtAuthenticationManager: IJwtAuthenticationManager
+    {
+            private readonly IDictionary<string, string> users = new Dictionary<string, string>
+            {
+            <b> {"test1","pwd1" }, {"test2","pwd2"}</b>
+            };
+            private readonly string _key;
+
+            public JwtAuthenticationManager(string key)
+            {
+                _key = key;
+            }
+
+            public string Authenticate(string userName, string password)
+            {
+                    if (!users.Any(u => u.Key == userName && u.Value == password))
+                    {
+                        return null;
+                    }
+                    var tokenHandler = new JwtSecurityTokenHandler();
+                    var tokenKey = Encoding.ASCII.GetBytes(_key);
+
+                    var tokenDescriptor = new SecurityTokenDescriptor
+                    {
+                        Subject = new ClaimsIdentity(new Claim[]
+                        {
+                        new Claim(ClaimTypes.Name, userName),
+
+                        }),
+                    <b> Expires = DateTime.UtcNow.AddHours(1),   //Let the credentials work for an hour</b>
+                        SigningCredentials =
+                        new SigningCredentials(new SymmetricSecurityKey(tokenKey), SecurityAlgorithms.HmacSha256Signature),
+
+                    };
+                    SecurityToken token = null;
+
+                    try
+                    {
+                        token = tokenHandler.CreateToken(tokenDescriptor);
+                    }
+                    catch (Exception ex)
+                    {
+                        var err = ex.Message;
+                    }
+                    return tokenHandler.WriteToken(token);
+               }
+    }
+</div>  
+<div class="code">
+    Back to the controller you created. 
+    Create the constructor which <b>IJwtAuthenticationManager</b> will be accepting as the parameter.
+
+</div>
+<div class="code frame">
+    public class NameController : ControllerBase
+    {
+            private readonly <b>IJwtAuthenticationManager</b> _jwtAuthenticationManager;
+
+            public NameController(<b>IJwtAuthenticationManager</b> jwtAuthenticationManager)
+            {
+                _jwtAuthenticationManager = jwtAuthenticationManager;
+            }
+        .
+        .
+        .
+</div>
+<div class="code">
+    Create a separate model called to hold the UserName and the Password,
+    And use <b>_jwtAuthenticationManager</b> to access the Authenticate method.
+</div>
+<div class="code frame">
+            <b>[AllowAnonymous] // Let unauthenticated users authenticate....</b>
+            [HttpPost("Authenticate")]
+            public IActionResult Authenticate([FromBody] User user)
+            {
+                var token = _jwtAuthenticationManager.Authenticate(user.UserName, user.Password);
+                if (token is null)
+                    return Unauthorized();
+                return Ok(token);
+
+            }
+
+            [HttpGet]
+            public string Get()
+            {
+                return "you're in !"; <b>Only when you're autenticated....'</b>
+            }
+</div>

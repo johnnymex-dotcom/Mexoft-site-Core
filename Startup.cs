@@ -51,6 +51,7 @@ namespace Mexoft_site
 
             app.UseRouting();
 
+            
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

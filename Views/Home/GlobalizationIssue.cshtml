@@ -68,4 +68,43 @@
 
     public IStringLocalizer&lt;HomeController&gt; <b>Localizer</b> { get { return _localizer; } }
 
+
+    public HomeController(ILogger&lt;HomeController&gt; logger, IStringLocalizer&lt;HomeController&gt;localizer)
+    {
+        _logger = logger;
+        _localizer = localizer;
+    }
+
+    public IActionResult Index()
+    {
+        ViewBag.Date = DateTime.Now;
+        ViewBag.FirstBasicString = _localizer["FirstBasicString"].Value;
+        ViewBag.ThatWasABadBeginning = _localizer["ThatWasABadBeginning"].Value;
+        return View();
+    }
+
+
+
 </div>  
+<div class="code">
+    On the corresponding View-file add the following lines:
+</div>
+<div class="code frame">
+    @@using GlobalizationStuff.Controllers
+    @@using Microsoft.AspNetCore.Mvc.Localization
+    @@using Microsoft.Extensions.Localization;
+
+    @@inject IStringLocalizer&lt;HomeController> Localizer
+
+
+    &lt;div class="text-center"&gt;
+        &lt;h1 class="display-4"&gt;Welcome&lt;/h1&gt;
+        &lt;span&gt;@@ViewBag.Date&lt;/span&gt;
+        &lt;div&gt;@@ViewBag.FirstBasicString&lt;/div&gt;
+        &lt;div&gt;@@ViewBag.ThatWasABadBeginning&lt;/div&gt;
+       &lt;p&gt;@@Localizer["ReadyToRumble"]&lt;/p&gt;
+    &lt;/div&gt;
+</div>
+<div class="code">
+
+</div>
