@@ -121,6 +121,16 @@ namespace Mexoft_site.Controllers
             return View();
         }
 
+        public ActionResult DoSomeSoapActions()
+        {
+            return View();
+        }
+
+        public ActionResult WinServiceAction()
+        {
+            return View();
+        }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

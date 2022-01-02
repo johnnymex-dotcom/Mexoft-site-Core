@@ -1,0 +1,196 @@
+﻿
+@{
+    ViewData["Title"] = "DoSomeSoapActions";
+}
+
+<h2>Recipe of creating a SOAP-server</h2>
+<div class="code">
+    Instantiate an empty ASP.NET Core project.
+    Modify <b>LaunchSettings.json</b> to look like this:
+</div>
+<div class="code frame">
+    {
+        "iisSettings": {
+            "windowsAuthentication": false,
+            "anonymousAuthentication": false,
+            "iisExpress": {
+            "applicationUrl": "",
+            "sslPort": 0
+             }
+        },
+        "profiles": {
+            "SoapServer": {
+                "commandName": "Project",
+                    "environmentVariables": {
+                        "ASPNETCORE_ENVIRONMENT": "Development"
+                    },
+                 "dotnetRunMessages": "true",
+                 "applicationUrl": "",
+                 "jsWebView2Debugging": true
+            }
+         }
+    }
+</div>
+<div class="code">
+    So that when looking at <b>project->Debug</b> in Visual Studio , you will see:
+     <img src="~/Images/Project-Debug.jpg" width="600" alt="eetert"/>
+</div>
+<div class="code">
+    Ensure that the following packages are installed in Nuget:
+</div>
+<div class="code frame">
+    <img src="~/Images/NuGetImageSoap.jpg" width="600" />
+</div>
+<div class="code">
+    Create a folder a name it, let's say <b>Models</b>.
+    In that folder create an interface called <b>ISampleService</b> with methods <b>Ping and GetToday</b> and looks like this:
+ </div>
+<div class="code frame">
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    <b>using System.ServiceModel;</b>
+    using System.Threading.Tasks;
+
+    namespace SoapServer.Models
+    {
+        [ServiceContract]
+        public interface <b>ISampleService</b>
+        {
+            [OperationContract]
+            <b>string Ping(string s);</b>
+
+            [OperationContract]
+            <b>DateTime GetToday();</b>
+        }
+    }
+
+</div>
+<div class="code">
+    and in the same folder add the respective class <b>SampleService</b> that uses the interface above.
+</div>
+<div class="code frame">
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+
+    //https://github.com/DigDes/SoapCore
+    namespace SoapServer.Models
+    {
+        public class SampleService: ISampleService
+        {
+            public string Ping(string s)
+            {
+                 return s + ", my great friend.... !!!!!";
+            }
+            public DateTime GetToday()
+            {
+                return DateTime.Now;
+            }
+        }
+    }
+</div>
+<div class="code">
+    In the <b>StartUp.cs</b> file add the following code to <b>ConfigureServices</b> and <b>Configure</b>
+</div>
+<div class="code frame">
+    using Microsoft.Extensions.DependencyInjection.Extensions;
+    using SoapCore;
+    using SoapServer.Models;
+    .
+    .
+    public void ConfigureServices(IServiceCollection services)
+    {
+    services.<b>AddSoapCore();</b>
+    services.<b>TryAddSingleton<ISampleService, SampleService>();</b>
+    services.AddMvc();
+    }
+
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        app.UseRouting();
+    <b>
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.UseSoapEndpoint<ISampleService>
+                ("/Service.asmx", new SoapEncoderOptions(), SoapSerializer.XmlSerializer);
+        });
+    </b>
+    }
+</div>
+<div class="code">
+    Assuming that the Soap-Webservice is accessed on port <b>8081</b>
+    modify code in <b>Program.cs</b>:
+</div>
+<div class="code frame">
+    //Delete all methods and replace it with the following:
+
+    using System.IO;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.Hosting;
+    using Microsoft.Extensions.Logging;
+
+    public static void Main(string[] args)
+    {
+    var host = new WebHostBuilder()
+    .UseKestrel()
+    .UseUrls("http://*:8081")
+    .UseContentRoot(Directory.GetCurrentDirectory())
+    .UseStartup<Startup>
+        ()
+        .ConfigureLogging(x =>
+        {
+        x.AddDebug();
+        x.AddConsole();
+        })
+        .Build();
+
+        host.Run();
+        }
+</div>
+<div class="code">
+    Hereafter when running the application, it shows this:
+</div>
+<div class="code frame" >
+    <img src="~/Images/SoapServerWaiting.jpg" style="border-color:blue" width="700" alt="My image"/>
+</div>
+<hr />
+<div class="code">
+    <h3>How to create a Soap-client:</h3>
+    Create a Console application, ensure that the Nuget package is installed:
+ </div>
+<div class="code frame">
+    <img src="~/Images/Nuget-Soap-Client.jpg" />
+    Modify Program.cs so that it has the following content:
+    <hr />
+    using SoapServer.Models;
+    using System;
+    using <b>System.ServiceModel;</b> //BasicHttpBinding, EndpointAddress and ChannelFactory are 
+                                                    //members of this assembly/Namespace
+
+    static void Main(string[] args)
+    {
+        var binding = new BasicHttpBinding();
+        var endpoint = new EndpointAddress(new Uri(string.Format("http://{0}:8081/Service.asmx", Environment.MachineName)));
+        var channelFactory = new ChannelFactory<ISampleService>(binding, endpoint);
+        var serviceClient = channelFactory.CreateChannel();
+
+        <b>//First call to Soap server</b>
+        var result = serviceClient.Ping("Howdy");
+        Console.WriteLine("Pinging.... {0}", result);
+
+        <b>//Second call to Soap server</b>
+        var Today = serviceClient.GetToday();
+        Console.WriteLine($"Today is:  {Today}");
+
+        Console.ReadKey();
+        Environment.Exit(0);
+        }
+</div>
+<div class="code">
+    Which should result in the outcome:
+</div>
+<div class="code frame">
+    <img src="~/Images/SoapClientResult.jpg" />
+</div>
