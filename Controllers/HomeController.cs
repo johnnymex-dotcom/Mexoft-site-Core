@@ -131,6 +131,16 @@ namespace Mexoft_site.Controllers
             return View();
         }
 
+        public ActionResult WinformAction_Config_DbCtx()
+        {
+            return View();
+        }
+
+        public ActionResult SwaggerImplementationONAndOFF()
+        {
+            return View();
+        }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

@@ -12,4 +12,72 @@
     To make a windows-service in .NET Core, start by selecting a Worker service project
     like seen below.
     <img src="~/Images/Worker-Service.jpg" width="550" />
+    In <b>Program.cs</b> modify the code so it looks like this:
+</div>
+<div class="code frame">
+    public class Program
+    {
+    public static void Main(string[] args)
+    {
+    CreateHostBuilder(args).Build().Run();
+    }
+
+    public static IHostBuilder CreateHostBuilder(string[] args) => Host.CreateDefaultBuilder(args)
+    .ConfigureLogging( options => options.AddFilter<EventLogLoggerProvider>
+        (level => level >= LogLevel.Information))
+        .ConfigureServices((hostContext, services) =>
+        {
+            services.AddHostedService<Worker>
+                ()
+                .Configure<EventLogSettings>(config =>
+                {
+                    config.LogName = "My Own WorkerService";
+                    config.SourceName = "My Own WorkerService Source";
+
+            });
+        }).UseWindowsService();
+   }
+</div>
+<div class="code">
+    Here in this example the windows service is named <b>My Own WorkerService</b> But you can name whatever name you wish.
+    In  the Worker.cs (computer-generated) you can change the code as in this example.
+</div>
+<div class="code frame">
+    using Microsoft.Extensions.Hosting;
+    using Microsoft.Extensions.Logging;
+    using System;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    namespace MyOwnWorkerService
+    {
+        public class Worker : BackgroundService
+        {
+            private readonly ILogger<Worker>  _logger;
+
+            public Worker(ILogger<Worker>logger)
+            {
+                _logger = logger;
+            }
+
+            protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+            {
+                while (!stoppingToken.IsCancellationRequested)
+                {
+                <b>
+                    //Here is the actual meat of the windows-service (Just an example)
+                    _logger.LogInformation("My Own Worker-Service running at: {time}", DateTimeOffset.Now);
+                    await Task.Delay(1000, stoppingToken);
+                </b>
+                }
+            }
+        }
+    }
+</div>
+<div class="code">
+    Pressing <b>ctrl-F5</b> to run the code, the following is displayed:
+    <img src="~/Images/RunF5winservice.jpg" width="500" />
+    To register it as Windows-service run this command in a DOS-window.:
+    <b>sc create "My Own WorkerService" binpath=c:\mywinservice\MyOwnWorkerService.exe</b>
+    Now you can start or stop the Windows-service and watch the logging in the Event-log.
 </div>

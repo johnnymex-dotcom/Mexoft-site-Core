@@ -1,0 +1,130 @@
+﻿
+@{
+    ViewData["Title"] = "WinformAction_Config_DbCtx";
+}
+
+<h4>Winforms JSON Configuration files, DbContext in .NET Core</h4>
+
+<div class="code">
+    To make a Winform application to follow the guidelines of .NET Core principles
+    start by adding the following packages to the project.
+    <img src="~/Images/Winform_nuget-packages.jpg" width="500" />
+    <br />
+    We are making an example where we want to implement a known <b>Entity Framework</b> and <b>DbContext</b>
+    and in order to do that we need to find a way to read from a configuration file,
+    namely in JSON format from a well-known filename <b>appsettings.json</b>
+    Here is the template for <b>program.cs</b>
+</div>
+<div class="code frame">
+    using System;
+    using System.Windows.Forms;
+    using JustAPlainWinApp.Models;
+    using <b>Microsoft.Extensions.DependencyInjection;</b>
+    using <b>Microsoft.EntityFrameworkCore;</b>
+    using <b>Microsoft.Extensions.Configuration;</b>
+
+
+    namespace JustAPlainWinApp
+    {
+        static class Program
+        {
+            private static <b>ServiceCollection</b> services;
+            private static <b>IConfiguration</b> config;
+            public static <b>ServiceProvider</b> { get; set; }
+
+            static void <b>ConfigureServices()</b>
+            {
+                //Add a reference to a configuration file (appsettings.json)
+                config = new ConfigurationBuilder()                      //From Microsoft.Extensions.Configuration
+                .AddJsonFile("appsettings.json")
+                .Build();
+                services = new ServiceCollection();
+                //<b>An example of implementation/creation of a class (with an interface)</b>
+                //services.AddTransient<ISomeThing, SomeThing>();
+                ServiceProvider = services.BuildServiceProvider();
+                //Add a reference to a <b>DbContext</b> class from <b>Entity Framework</b>
+                services.AddDbContext<FPCContext>(options => options.UseSqlServer(config.GetConnectionString("FpcDb")));
+            }
+
+            [STAThread]
+            static void Main()
+            {
+                Application.SetHighDpiMode(HighDpiMode.SystemAware);
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                //Make a call to method above for configuring services
+                <b>ConfigureServices();</b>
+                //Collect the nescessary instantiated services to use in the Form class (<b>Address the DbContext</b>)
+                var buildsp = services.BuildServiceProvider();
+                <b>var _fpc = buildsp.GetService<FPCContext>();</b>
+                Application.<b>Run(new Form1(config, _fpc));</b>
+
+            }
+       }
+    }
+
+
+</div>
+<div class="code">
+    In the respective <b>Form</b> class you can use it in this way:
+</div>
+<div class="code frame">
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Windows.Forms;
+    using JustAPlainWinApp.Models;
+    using <b>Microsoft.Extensions.Configuration;</b>
+
+    namespace JustAPlainWinApp
+    {
+        public partial class Form1 : Form
+        {
+            private <b>IConfiguration</b> config;
+            public  <b>FPCContext</b> Fpc;
+            private <b>List&lt;FpcEmployee>&gt;</b> EmpList;
+
+
+            public Form1(<b>IConfiguration</b> configuration, <b>FPCContext</b> FpcContext)
+            {
+                InitializeComponent();
+                config = configuration;
+                Fpc = FpcContext;
+            }
+
+            private void Form1_Load(object sender, EventArgs e)
+            {
+                <b>//Several ways to access the configuration items as shown just below</b>
+                // var info1 = config.GetSection("Settings").GetSection("MyPrivateInfo").Value;
+                var num = config.GetValue<double>("Settings:MyPrivateInfo");
+                //var x = config.GetValue(typeof(double), "Settings:MyPrivateInfo");
+                var info =  config["Settings:MyPrivateInfo"];
+                label2.Text = $"MyPrivateInfo contains {info} and is of type " + num.GetType().FullName;
+                <b>// Here access the content from the DbContext</b>
+                EmpList = Fpc.FpcEmployees.ToList();
+                this.dataGridView1.DataSource = EmpList;
+                foreach (var emp in EmpList)
+                {
+                    string[] itemArr = new string[]{ emp.Id.ToString(), emp.Name, emp.Alias, emp.Mobile,emp.HomeEmail};
+                    listView1.Items.Add( new ListViewItem(itemArr));
+                }
+                dataGridView1.DataSource = EmpList;
+                dataGridView1.Columns["Id"].Visible = false;
+                dataGridView1.Columns["DepId"].Visible = false;
+                dataGridView1.Columns["JobStatus"].Visible = false;
+                dataGridView1.Columns["Valid"].ReadOnly = true;
+                dataGridView1.Columns["HomeEmail"].HeaderText = "E-mail";
+           }
+        }
+    }
+</div>
+<div class="code">
+    Ensure to set <b>Copy To Output Directory</b> to <b>Copy Always</b>
+    <img src="~/Images/CopyToOD_always.jpg" />
+   
+</div>
+<div class="code">
+    So the outcome will possibly be like this:
+    <img src="~/Images/Winform-form-outcome.jpg" width="500" />
+</div>
+

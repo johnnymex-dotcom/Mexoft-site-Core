@@ -1,0 +1,89 @@
+﻿
+@{
+    ViewData["Title"] = "SwaggerImplementationONAndOFF";
+}
+
+<h1>Swagger-Implementation On and Off</h1>
+<div class="code">
+    By default when creating a Web-API project the Swagger tool is automatically implemented.
+    In certain cases you need to eliminatate the Swagger functionality, but later you might need it
+    for test purposes.
+    Following is an example of what to do to disable the Swagger functionality :
+</div>
+<div class="code frame">
+    //<b>launchSettings.json - the lines with bold-face is what are needed to disable Swagger</b>
+    {
+        "iisSettings": {
+            "windowsAuthentication": false,
+            "anonymousAuthentication": true,
+            "iisExpress": {
+            "applicationUrl": "http://localhost:23005",
+            "sslPort": 0
+        }
+    },
+    "$schema": "http://json.schemastore.org/launchsettings.json",
+    "profiles": {
+            "IIS Express": {
+            "commandName": "IISExpress",
+            "launchBrowser": true,
+            <b>"launchUrl": "api/FishDatas" /*"swagger"*/,</b>
+            "environmentVariables": {
+            "ASPNETCORE_ENVIRONMENT": "Development"
+        }
+    },
+    "FishWebServer": {
+            "commandName": "Project",
+            "launchBrowser": true,
+            <b>"launchUrl": "api/FishDatas"/*"swagger"*/,</b>
+            "environmentVariables": {
+            "ASPNETCORE_ENVIRONMENT": "Development"
+        },
+    "dotnetRunMessages": "true",
+    "applicationUrl": "http://localhost:5000"
+    }
+  }
+}
+</div>
+<div class="code">
+    And in the Startup.cs file:
+</div>
+<div class="code frame">
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddControllers();
+    <b>
+        //services.AddSwaggerGen(c =>
+        //{
+        //    c.SwaggerDoc("v1", new OpenApiInfo { Title = "FishWebServer", Version = "v1" });
+        //});
+    </b>
+        services.AddDbContext<FishDbContext>
+        (options =>
+            options.UseSqlServer(Configuration.GetConnectionString("Fish"),
+            sqlServerOptionsAction: sqlOptions =>
+            sqlOptions.EnableRetryOnFailure()
+        )) ;
+    }
+
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        if (env.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+        <b>
+            //app.UseSwagger();
+            //app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "FishWebServer v1"));
+        </b>
+        }
+
+        app.UseRouting();
+
+        app.UseAuthorization();
+
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers();
+        });
+    }
+</div>
+
